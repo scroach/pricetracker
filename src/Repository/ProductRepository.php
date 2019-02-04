@@ -19,17 +19,18 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    /**
-     * @param \DateTime $date
-     * @return Product[]
-     */
-    public function findProductsNeedingUpdate(\DateTime $date)
+	/**
+	 * @param \DateTime $date
+	 * @param int $maxResults
+	 * @return Product[]
+	 */
+    public function findProductsNeedingUpdate(\DateTime $date, int $maxResults = 100)
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.lastPriceUpdate IS NULL')
             ->orWhere('p.lastPriceUpdate < :date')->setParameter('date', $date)
             ->orderBy('p.lastPriceUpdate', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults($maxResults)
             ->getQuery()
             ->getResult()
         ;

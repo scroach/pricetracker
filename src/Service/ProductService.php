@@ -18,7 +18,6 @@ use App\Service\Crawler\XXXLutz;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 class ProductService
 {
@@ -66,10 +65,18 @@ class ProductService
         return $product;
     }
 
-    public function fetchProductsNeedingUpdate()
+    public function countProductsNeedingUpdate()
     {
-        $count = $this->productRepository->countProductsNeedingUpdate((new \DateTime())->modify(self::MINIMUM_TIME_SINCE_LAST_UPDATE));
-        echo $count;
+        return $this->productRepository->countProductsNeedingUpdate((new \DateTime())->modify(self::MINIMUM_TIME_SINCE_LAST_UPDATE));
+    }
+
+	/**
+	 * @param int $maxResults
+	 * @return Product[]
+	 */
+    public function fetchProductsNeedingUpdate(int $maxResults = 100)
+    {
+	    return $this->productRepository->findProductsNeedingUpdate((new \DateTime())->modify(self::MINIMUM_TIME_SINCE_LAST_UPDATE), $maxResults);
     }
 
     public function updateAllProducts()
