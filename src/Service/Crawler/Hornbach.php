@@ -3,12 +3,15 @@
 namespace App\Service\Crawler;
 
 
-class Hornbach implements PriceCrawler
+use App\Service\CrawlerResponse;
+use App\Service\PriceGuess;
+
+class Hornbach extends AbstractCrawler
 {
 
-    public function extractPrice(string $html): ?float
+    public function extractPrice(CrawlerResponse $crawlerResponse): ?PriceGuess
     {
-        preg_match('/"price":"([\d,.]+)"/', $html, $matches);
+        preg_match('/"price":"([\d,.]+)"/', $crawlerResponse->getResponseBody(), $matches);
 
         if(!isset($matches[1])) {
             throw new \Exception('couldnt find div with price data attribute');
@@ -17,7 +20,12 @@ class Hornbach implements PriceCrawler
         $price = $matches[1];
         $price = floatval($price);
 
-        return $price;
+	    return new PriceGuess($price, $this->getConfidenceLevelByUrl($crawlerResponse->getRequestUrl()));
     }
+
+	protected function getApplicableUrlRegex(): ?string
+	{
+		return '/^https?:\/\/(www.)?hornbach\.at\//';
+	}
 
 }

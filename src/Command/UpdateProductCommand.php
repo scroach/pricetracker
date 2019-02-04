@@ -52,11 +52,17 @@ class UpdateProductCommand extends Command
 			$products = $this->productService->fetchProductsNeedingUpdate();
 			$updated = 0;
 			$updateMessages = [];
+			$errors = [];
 
 			$io->progressStart(count($products));
 
 			foreach ($products as $product) {
-				$this->productService->updateProduct($product);
+				try {
+					$this->productService->updateProduct($product);
+				} catch (\Exception $exception) {
+					$errors[] = sprintf('Error while trying to update prooduct: %s', $exception->getMessage());
+					continue;
+				}
 				$updateMessages[] = sprintf('Product %d price has been updated to %.2f €', $product->getId(), $product->getCurrentPrice());
 				$io->progressAdvance();
 				$updated++;
@@ -69,6 +75,10 @@ class UpdateProductCommand extends Command
 
 			$io->newLine(2);
 			$io->listing($updateMessages);
+			if (count($errors)) {
+				$io->listing($errors);
+				$io->error(sprintf('Got %d errors during update', count($errors)));
+			}
 			$remaining = $this->productService->countProductsNeedingUpdate();
 			$io->success(sprintf('Updated %d products. Remaining: %d', $updated, $remaining));
 

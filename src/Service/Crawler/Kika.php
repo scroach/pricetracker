@@ -3,14 +3,16 @@
 namespace App\Service\Crawler;
 
 
+use App\Service\CrawlerResponse;
+use App\Service\PriceGuess;
 use Symfony\Component\DomCrawler\Crawler;
 
-class Kika implements PriceCrawler
+class Kika extends AbstractCrawler
 {
 
-    public function extractPrice(string $html): ?float
+    public function extractPrice(CrawlerResponse $crawlerResponse): ?PriceGuess
     {
-        $crawler = new Crawler($html);
+        $crawler = new Crawler($crawlerResponse->getResponseBody());
         $crawler = $crawler->filter('div[data-gae-product-price]');
 
         if($crawler->count() === 0) {
@@ -20,7 +22,12 @@ class Kika implements PriceCrawler
         $price = $crawler->attr('data-gae-product-price');
         $price = floatval($price);
 
-        return $price;
+	    return new PriceGuess($price, $this->getConfidenceLevelByUrl($crawlerResponse->getRequestUrl()));
     }
+
+	protected function getApplicableUrlRegex(): ?string
+	{
+		return '/^https?:\/\/(www.)?kika\.at\//';
+	}
 
 }
