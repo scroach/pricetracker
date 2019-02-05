@@ -35,7 +35,7 @@ class ProductService
 	/** @var PriceCrawler[] */
 	private $crawlers = [];
 
-    const MINIMUM_TIME_SINCE_LAST_UPDATE = '-1hour';
+	const MINIMUM_TIME_SINCE_LAST_UPDATE = '-1hour';
 
 	public function __construct(EntityManagerInterface $entityManager,
 	                            ProductRepository $productRepository,
@@ -95,7 +95,7 @@ class ProductService
 		$this->logger->info(sprintf('Updating product id %d', $product->getId()));
 		$startTime = microtime(true);
 
-		$response = new CrawlerResponse($product->getUrl(), file_get_contents($product->getUrl()));
+		$response = $this->performHttpRequest($product);
 
 		$requestLog = new RequestLog();
 		$requestLog->setUrl($product->getUrl());
@@ -139,6 +139,24 @@ class ProductService
 			throw new \Exception('invalid zero or negative price');
 		}
 		return $bestPriceGuess;
+	}
+
+	private function performHttpRequest(Product $product): CrawlerResponse
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $product->getUrl());
+		curl_setopt($ch, CURLOPT_USERAGENT, UserAgent::CHROME_MOBILE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$response = curl_exec($ch);
+		if ($response === false) {
+			throw new \Exception('error during curl request: ' . curl_error($ch));
+		}
+
+		$response = new CrawlerResponse($product->getUrl(), $response);
+		return $response;
 	}
 
 }
