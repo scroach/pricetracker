@@ -9,144 +9,159 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @ORM\Id()
+	 * @ORM\GeneratedValue()
+	 * @ORM\Column(type="integer")
+	 */
+	private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $name;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $currentPrice;
+	/**
+	 * @ORM\Column(type="float", nullable=true)
+	 */
+	private $currentPrice;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $lastPriceUpdate;
+	/**
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	private $currency;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $url;
+	/**
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
+	private $lastPriceUpdate;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $externalProductId;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $url;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
+	/**
+	 * @ORM\Column(type="string", length=255, nullable=true)
+	 */
+	private $externalProductId;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $modified;
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	private $created;
 
-    /**
-     * Product constructor.
-     */
-    public function __construct()
-    {
-        $this->created = new \DateTime();
-        $this->modified= new \DateTime();
-    }
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	private $modified;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	/**
+	 * Product constructor.
+	 */
+	public function __construct()
+	{
+		$this->created = new \DateTime();
+		$this->modified = new \DateTime();
+	}
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
+	public function getName(): ?string
+	{
+		return $this->name;
+	}
 
-        return $this;
-    }
+	public function setName(string $name): self
+	{
+		$this->name = $name;
 
-    public function getCurrentPrice(): ?float
-    {
-        return $this->currentPrice;
-    }
+		return $this;
+	}
 
-    public function setCurrentPrice(?float $currentPrice): self
-    {
-        $this->currentPrice = $currentPrice;
+	public function getCurrentPrice(): ?float
+	{
+		return $this->currentPrice;
+	}
 
-        return $this;
-    }
+	public function setCurrentPrice(?float $currentPrice): self
+	{
+		$this->currentPrice = $currentPrice;
 
-    public function getLastPriceUpdate(): ?\DateTimeInterface
-    {
-        return $this->lastPriceUpdate;
-    }
+		return $this;
+	}
 
-    public function setLastPriceUpdate(?\DateTimeInterface $lastPriceUpdate): self
-    {
-        $this->lastPriceUpdate = $lastPriceUpdate;
+	public function getLastPriceUpdate(): ?\DateTimeInterface
+	{
+		return $this->lastPriceUpdate;
+	}
 
-        return $this;
-    }
+	public function setLastPriceUpdate(?\DateTimeInterface $lastPriceUpdate): self
+	{
+		$this->lastPriceUpdate = $lastPriceUpdate;
 
-    public function getUrl(): ?string
-    {
-        return $this->url;
-    }
+		return $this;
+	}
 
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
+	public function getUrl(): ?string
+	{
+		return $this->url;
+	}
 
-        return $this;
-    }
+	public function setUrl(string $url): self
+	{
+		$this->url = $url;
 
-    public function getExternalProductId(): ?string
-    {
-        return $this->externalProductId;
-    }
+		return $this;
+	}
 
-    public function setExternalProductId(?string $externalProductId): self
-    {
-        $this->externalProductId = $externalProductId;
+	public function getExternalProductId(): ?string
+	{
+		return $this->externalProductId;
+	}
 
-        return $this;
-    }
+	public function setExternalProductId(?string $externalProductId): self
+	{
+		$this->externalProductId = $externalProductId;
 
-    public function getCreated(): ?\DateTimeInterface
-    {
-        return $this->created;
-    }
+		return $this;
+	}
 
-    public function setCreated(\DateTimeInterface $created): self
-    {
-        $this->created = $created;
+	public function getCreated(): ?\DateTimeInterface
+	{
+		return $this->created;
+	}
 
-        return $this;
-    }
+	public function setCreated(\DateTimeInterface $created): self
+	{
+		$this->created = $created;
 
-    public function getModified(): ?\DateTimeInterface
-    {
-        return $this->modified;
-    }
+		return $this;
+	}
 
-    public function setModified(\DateTimeInterface $modified): self
-    {
-        $this->modified = $modified;
+	public function getModified(): ?\DateTimeInterface
+	{
+		return $this->modified;
+	}
 
-        return $this;
-    }
+	public function setModified(\DateTimeInterface $modified): self
+	{
+		$this->modified = $modified;
+
+		return $this;
+	}
+
+	public function getCurrency(): ?string
+	{
+		return $this->currency;
+	}
+
+	public function setCurrency(?string $currency): void
+	{
+		$this->currency = $currency;
+	}
 
 }

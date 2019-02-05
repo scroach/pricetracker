@@ -45,7 +45,7 @@ class UpdateProductCommand extends Command
 		if ($id) {
 			$product = $this->repository->find($id);
 			$this->productService->updateProduct($product);
-			$io->success(sprintf('Product price has been updated to %.2f €', $product->getCurrentPrice()));
+			$io->success(sprintf('Product price has been updated to %.2f %s', $product->getCurrentPrice(), $product->getCurrency()));
 		} else {
 			$io->note(sprintf('Maximum execution time is set to: %f', $maxExecutionTime));
 

@@ -7,6 +7,7 @@ use App\Entity\PriceHistory;
 use App\Entity\Product;
 use App\Entity\RequestLog;
 use App\Repository\ProductRepository;
+use App\Service\Crawler\Aliexpress;
 use App\Service\Crawler\Hellweg;
 use App\Service\Crawler\Hornbach;
 use App\Service\Crawler\Ikea;
@@ -52,6 +53,7 @@ class ProductService
 			new Obi(),
 			new Hornbach(),
 			new Hellweg(),
+			new Aliexpress(),
 		];
 	}
 
@@ -101,14 +103,16 @@ class ProductService
 		$requestLog->setResponseBody($response->getResponseBody());
 		$requestLog->setTimestamp(new \DateTime());
 
-		$price = $this->extractPrice($response);
+		$priceGuess = $this->extractPrice($response);
 
 		$priceHistory = new PriceHistory();
-		$priceHistory->setValue($price);
+		$priceHistory->setValue($priceGuess->getPrice());
+		$priceHistory->setCurrency($priceGuess->getCurrency());
 		$priceHistory->setTimestamp(new \DateTime());
 		$priceHistory->setRequest($requestLog);
 
-		$product->setCurrentPrice($price);
+		$product->setCurrentPrice($priceGuess->getPrice());
+		$product->setCurrency($priceGuess->getCurrency());
 		$product->setLastPriceUpdate(new \DateTime());
 
 		$this->entityManager->persist($requestLog);
@@ -116,7 +120,7 @@ class ProductService
 		$this->entityManager->flush();
 	}
 
-	public function extractPrice(CrawlerResponse $response): float
+	public function extractPrice(CrawlerResponse $response): PriceGuess
 	{
 		/** @var PriceGuess|null $bestPriceGuess */
 		$bestPriceGuess = null;
@@ -134,7 +138,7 @@ class ProductService
 		if ($bestPriceGuess === null || $bestPriceGuess->getPrice() <= 0) {
 			throw new \Exception('invalid zero or negative price');
 		}
-		return $bestPriceGuess->getPrice();
+		return $bestPriceGuess;
 	}
 
 }

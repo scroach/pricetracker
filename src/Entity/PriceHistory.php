@@ -9,66 +9,82 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PriceHistory
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @ORM\Id()
+	 * @ORM\GeneratedValue()
+	 * @ORM\Column(type="integer")
+	 */
+	private $id;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $value;
+	/**
+	 * @ORM\Column(type="float")
+	 */
+	private $value;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $timestamp;
+	/**
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	private $currency;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\RequestLog")
-     */
-    private $request;
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	private $timestamp;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	/**
+	 * @ORM\ManyToOne(targetEntity="App\Entity\RequestLog")
+	 */
+	private $request;
 
-    public function getValue(): ?float
-    {
-        return $this->value;
-    }
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
 
-    public function setValue(float $value): self
-    {
-        $this->value = $value;
+	public function getValue(): ?float
+	{
+		return $this->value;
+	}
 
-        return $this;
-    }
+	public function setValue(float $value): self
+	{
+		$this->value = $value;
 
-    public function getTimestamp(): ?\DateTimeInterface
-    {
-        return $this->timestamp;
-    }
+		return $this;
+	}
 
-    public function setTimestamp(\DateTimeInterface $timestamp): self
-    {
-        $this->timestamp = $timestamp;
+	public function getTimestamp(): ?\DateTimeInterface
+	{
+		return $this->timestamp;
+	}
 
-        return $this;
-    }
+	public function setTimestamp(\DateTimeInterface $timestamp): self
+	{
+		$this->timestamp = $timestamp;
 
-    public function getRequest(): ?RequestLog
-    {
-        return $this->request;
-    }
+		return $this;
+	}
 
-    public function setRequest(?RequestLog $request): self
-    {
-        $this->request = $request;
+	public function getRequest(): ?RequestLog
+	{
+		return $this->request;
+	}
 
-        return $this;
-    }
+	public function setRequest(?RequestLog $request): self
+	{
+		$this->request = $request;
+
+		return $this;
+	}
+
+	public function getCurrency(): ?string
+	{
+		return $this->currency;
+	}
+
+	public function setCurrency(?string $currency): void
+	{
+		$this->currency = $currency;
+	}
+
 }
